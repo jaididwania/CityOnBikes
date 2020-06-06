@@ -30,6 +30,8 @@ def rent_now(request):
     print(request.POST.get('startDate2'))
     if request.method == 'POST':
 
+
+
         dic = {
                 'location' : '',
                 'sth' : '',
@@ -99,17 +101,23 @@ def rent_now(request):
 
                 if (dic['bike']=='Deluxe') :
                     amount=20
+                    extra_charges=40
                 elif (dic['bike']=='Splendor Plus') :
                     amount=25
+                    extra_charges=45
                 elif (dic['bike']=='Pleasure') :
                     amount=30
+                    extra_charges=50
                 elif (dic['bike']=='Passion Pro') :
                     amount=35
+                    extra_charges=55
                 elif (dic['bike']=='Royal Enfield 200CC') :
                     amount=60
+                    extra_charges=80
 
 
                 l.append(amount*duration)
+                l.append(extra_charges)
                 response = redirect('invoice',l)
                 return response
 
@@ -196,7 +204,8 @@ def invoice(request,dic):
         'endtime' : endtime ,
         'loc' : l[0],
         'bike' : l[5],
-        'amount' : l[6]
+        'amount' : l[6],
+        'extra_charges' :l[7],
         }
 
     return render(request,"invoice.html",context)
@@ -209,7 +218,7 @@ def paymentDone(request,dic):
     dic = dic[1:-1]
     dic = dic.split(', ')
     context = {
-        'otp' : dic[7]
+        'otp' : dic[8]
     }
 
     starttime = time(int(dic[1][1:-1]),int(dic[2][1:-1]))
@@ -222,7 +231,7 @@ def paymentDone(request,dic):
     rented_bike.end_time = endtime
     rented_bike.bike = dic[5]
     rented_bike.amount = int(dic[6][1:-1])
-    rented_bike.otp = dic[7]
+    rented_bike.otp = dic[8]
     rented_bike.save()
 
     return render(request,"qrcode_page.html",context)
@@ -235,6 +244,8 @@ def about(request):
 def contact(request):
 
      return render(request,'contact.html')
+
+   
 
      
      
